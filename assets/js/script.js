@@ -10,21 +10,28 @@ var makeSection = $("<section>");
 var makeArticle = $("<article>");
 var makeAside = $("<aside>");
 var searchButton = makeButton;
-var searchHistory = [];
+var searchHistory = ["denver"];
 
 
-if(searchHistory.indexOf() == -1 ) {
 
-    searchHistory.push("Denver");
+// if(searchHistory.length = )
 
-} else {
-   searchHistory.push(JSON.parse(localStorage.getItem("city")));
+localStorage.setItem("city" , JSON.stringify(searchHistory));
+var returnValues = JSON.parse(localStorage.getItem("city"));
+console.log(returnValues)
+for(i = 0; i < returnValues.length;i++){
+
+
+    searchHistory.push(returnValues[i]);
 }
+
+
+localStorage.setItem("city" , JSON.stringify(searchHistory));
 
 $("document").ready(function(){
 
 
-makeContainer.addClass("container")
+makeContainer.addClass("container row")
 
 makeInput.addClass(" me-2 col-4")
 makeInput.attr("placeholder","Search");
@@ -34,9 +41,9 @@ makeInput.attr("aria-label","Search");
 
 makeAside.addClass("row")
 makeArticle.addClass("col-12")
-makeSection.addClass("col-8 row")
+makeSection.addClass("col-12 height")
 
-makeHeader.addClass("navbar navbar-expand-lg navbar-light bg-light col-2 row");
+makeHeader.addClass("navbar navbar-expand-lg navbar-light bg-light col-12 row");
 makeH1.addClass("navbar-brand col-2");
 makeH1.text("Weather Dashboard");
 
@@ -47,7 +54,8 @@ searchButton.text("Search");
 
 makeLi.addClass("col-12 searchHistory")
 
-makeUl.addClass("row col-4")
+makeUl.addClass("row col-12")
+makeAside.addClass("sideTitle col-4")
 
 
 
@@ -62,7 +70,35 @@ $(makeSection).append(searchButton);
 $(makeContainer).append(makeAside);
 $(makeAside).append(makeArticle);
 $(makeArticle).append(makeUl);
-$(makeUl).append(makeLi);
+
+
+
+var makeCard = $("<section>");
+makeCard.addClass("card col-8")
+$(makeP).text( "hello")
+makeCard.append(makeP);
+$(makeP).text("again")
+makeCard.append(makeP);
+var wrap = $("<div>");
+wrap.addClass("row")
+for(i = 0; i < 5; i++){
+var fiveDay = $("<article>");
+fiveDay.addClass("col-2 fiveDay")
+
+var lineOne = $("<p>");
+$(lineOne).text("hello");
+var lineTwo =  $("<p>");
+$(lineTwo).text("Everybody");
+fiveDay.append("lineOne")
+fiveDay.append("lineTwo")
+wrap.append(fiveDay)
+makeCard.append(wrap)  
+}
+
+
+$(makeContainer).append(makeCard);
+
+
 
 $("body").append(makeContainer);
 
@@ -79,13 +115,39 @@ function render(){
         var newButton = $('<button>')
 
         newButton.text(searchHistory[i]);
-        newButton.on("click",searching);
+        newButton.on("click",savedSearch);
 
         $(makeUl).append(newButton);
         
 
 
     }
+}
+
+function makingAjaxCall(a){
+
+
+
+    var APIkey = "3ca7bb017648384c3b897e93f5370638";
+
+    var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ a +"&appid=" + APIkey;
+
+
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        console.log(response);
+        console.log(response.city.name);
+        console.log(response.city.name);
+        console.log(response.list[0].main.temp);
+ 
+        var APIkey = "3ca7bb017648384c3b897e93f5370638";
+
+        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ a +"&appid=" + APIkey;
+
+    });
 }
 
 function searching(event){
@@ -96,21 +158,16 @@ function searching(event){
     searchHistory.push(searchResults);
     localStorage.setItem("city" , JSON.stringify(searchHistory));
 
-    var urlKey = "3ca7bb017648384c3b897e93f5370638";
-
-    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ searchResults +"&appid=" + urlKey;
-   $.ajax({
-       url: queryURL,
-       method: "GET"
-   }).then(function(response){
-       console.log(response);
-       console.log(response.main.humidity);
-   
-   });
-
+    makingAjaxCall(searchResults);
 
     render();
 }
+
+function savedSearch(){
+    var clickedValue = this.textContent;
+    makingAjaxCall(clickedValue);
+
+};
 
 
 $(searchButton).on("click",searching);
