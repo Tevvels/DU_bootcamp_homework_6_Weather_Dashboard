@@ -1,5 +1,15 @@
 * {
-  margin: 0;
-  padding: 0;
   background: rgba(020, 220, 120, 0.5);
+}
+
+.container {
+  height: 80vh;
+  width: 80vw;
+  background: blue;
+}
+.searchHistory {
+  height: 40px;
+  width: 120px;
+  text-align: center;
+  border: 1px solid white;
 }
