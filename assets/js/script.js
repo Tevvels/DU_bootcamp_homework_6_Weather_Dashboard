@@ -14,20 +14,6 @@ var searchHistory = ["denver"];
 
 
 
-// if(searchHistory.length = )
-
-localStorage.setItem("city" , JSON.stringify(searchHistory));
-var returnValues = JSON.parse(localStorage.getItem("city"));
-console.log(returnValues)
-for(i = 0; i < returnValues.length;i++){
-
-
-    searchHistory.push(returnValues[i]);
-}
-
-
-localStorage.setItem("city" , JSON.stringify(searchHistory));
-
 $("document").ready(function(){
 
 
@@ -96,12 +82,16 @@ makeCard.append(wrap)
 }
 
 
+if(localStorage.getItem('city')=== null){
+    searchHistory =[];
+} else {
+    searchHistory = JSON.parse(localStorage.getItem("city"));
+}
+
 $(makeContainer).append(makeCard);
 
 
-
 $("body").append(makeContainer);
-
 
 
 var i = 0;
@@ -110,28 +100,23 @@ var i = 0;
 function render(){
 
 
-    for(i = 0; i < searchHistory.length;i++){
-
-        var newButton = $('<button>')
-
-        newButton.text(searchHistory[i]);
-        newButton.on("click",savedSearch);
-
-        $(makeUl).append(newButton);
         
 
 
+    for(i = 0; i < searchHistory.length;i++){
+
+        var newButton = $('<button>')
+        newButton.text(searchHistory[i]);
+        newButton.on("click",savedSearch);
+        $(makeUl).append(newButton);
+        
     }
 }
 
 function makingAjaxCall(a){
 
-
-
     var APIkey = "3ca7bb017648384c3b897e93f5370638";
-
     var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ a +"&appid=" + APIkey;
-
 
 
     $.ajax({
@@ -142,21 +127,25 @@ function makingAjaxCall(a){
         console.log(response.city.name);
         console.log(response.city.name);
         console.log(response.list[0].main.temp);
- 
-        var APIkey = "3ca7bb017648384c3b897e93f5370638";
 
-        var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ a +"&appid=" + APIkey;
 
     });
 }
 
 function searching(event){
-    event.preventDefault();
-    
+    event.preventDefault(); 
+
+
     $(makeUl).empty()
+    
+
     var searchResults = $("#searchInput").val()
+    
     searchHistory.push(searchResults);
-    localStorage.setItem("city" , JSON.stringify(searchHistory));
+    
+    localStorage.setItem("city" , JSON.stringify
+    
+    (searchHistory));
 
     makingAjaxCall(searchResults);
 
