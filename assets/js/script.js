@@ -10,7 +10,7 @@ var makeSection = $("<section>");
 var makeArticle = $("<article>");
 var makeAside = $("<aside>");
 var searchButton = makeButton;
-var searchHistory = ["denver"];
+var searchHistory = [];
 
 
 
@@ -29,7 +29,7 @@ makeAside.addClass("row")
 makeArticle.addClass("col-12")
 makeSection.addClass("col-12 height")
 
-makeHeader.addClass("navbar navbar-expand-lg navbar-light bg-light col-12 row");
+makeHeader.addClass("navbar navbar-expand-lg navbar-light bg-light col-12 header row");
 makeH1.addClass("navbar-brand col-2");
 makeH1.text("Weather Dashboard");
 
@@ -58,6 +58,17 @@ $(makeAside).append(makeArticle);
 $(makeArticle).append(makeUl);
 
 
+// Search for a City:
+
+// card > City(day) symbol 
+
+// temp File, humidity, wind ScopedCredential, uv Index 
+
+// 5 day forecast
+
+// Date,symbol, temp, humidity 
+
+
 
 var makeCard = $("<section>");
 makeCard.addClass("card col-8")
@@ -67,19 +78,8 @@ $(makeP).text("again")
 makeCard.append(makeP);
 var wrap = $("<div>");
 wrap.addClass("row")
-for(i = 0; i < 5; i++){
-var fiveDay = $("<article>");
-fiveDay.addClass("col-2 fiveDay")
 
-var lineOne = $("<p>");
-$(lineOne).text("hello");
-var lineTwo =  $("<p>");
-$(lineTwo).text("Everybody");
-fiveDay.append("lineOne")
-fiveDay.append("lineTwo")
-wrap.append(fiveDay)
-makeCard.append(wrap)  
-}
+
 
 
 if(localStorage.getItem('city')=== null){
@@ -125,8 +125,40 @@ function makingAjaxCall(a){
     }).then(function(response){
         console.log(response);
         console.log(response.city.name);
+
+        function fahrenheit(a){
+            return (a - 273.15) * 1.80 + 32;
+        }
+        console.log(fahrenheit(response.list[0].main.temp));
+        console.log(response.list[1].main.humidity);
+        console.log(response.list[2].wind.speed);
+        console.log(response.list[3].weather[0].icon);
+        console.log(response.list[4].main.temp);
         console.log(response.city.name);
-        console.log(response.list[0].main.temp);
+
+        for(i=0;i < 5;i++){
+     
+           
+            var fiveDay = $("<article>");
+            var lineOne = $("<p>");
+            var lineTwo = $("<p>");
+            var lineThree = $("<p>");
+            
+
+             lineOne.text(response.list[(i * 8)].dt_txt);
+             lineTwo.text(Math.floor(response.list[i].main.humidity));
+            lineThree.text(Math.floor(fahrenheit(response.list[i].main.temp)));
+
+
+            fiveDay.append(lineOne);
+            fiveDay.append(lineTwo);
+            fiveDay.append(lineThree);
+            fiveDay.addClass("col-2 fiveDay")
+            wrap.append(fiveDay)
+           
+            makeCard.append(wrap)
+            console.log();
+        }
 
 
     });
@@ -153,6 +185,7 @@ function searching(event){
 }
 
 function savedSearch(){
+
     var clickedValue = this.textContent;
     makingAjaxCall(clickedValue);
 
