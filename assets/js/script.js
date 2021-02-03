@@ -80,7 +80,7 @@ $("body").append(makeContainer);
 function render(){
     // for each item in the searchHistory array
     for(i = 0; i < searchHistory.length;i++){
-        // make a button, add text and a event listner on it  
+        // make a button, add text,a class and a event listner on it  
         var newButton = $('<button>').text(searchHistory[i]).on("click",savedSearch);
         // append the new button the ul 
         $(makeUl).append(newButton);
