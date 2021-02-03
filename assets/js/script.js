@@ -132,7 +132,7 @@ function makingAjaxCall(a){
         console.log(fahrenheit(response.list[0].main.temp));
         console.log(response.list[1].main.humidity);
         console.log(response.list[2].wind.speed);
-        console.log(response.list[3].weather[0].icon);
+
         console.log(response.list[4].main.temp);
         console.log(response.city.name);
 
@@ -143,16 +143,17 @@ function makingAjaxCall(a){
             var lineOne = $("<p>");
             var lineTwo = $("<p>");
             var lineThree = $("<p>");
+            var lineFour = $("<img>");
             
 
              lineOne.text(response.list[(i * 8)].dt_txt);
              lineTwo.text(Math.floor(response.list[i].main.humidity));
             lineThree.text(Math.floor(fahrenheit(response.list[i].main.temp)));
-
-
+            lineFour.text(response.list[i].weather[0].icon).attr("src","http://openweathermap.org/img/wn/" +response.list[i].weather[0].icon +".png")
             fiveDay.append(lineOne);
             fiveDay.append(lineTwo);
             fiveDay.append(lineThree);
+            fiveDay.append(lineFour);
             fiveDay.addClass("col-2 fiveDay")
             wrap.append(fiveDay)
            
@@ -199,3 +200,5 @@ render();
 })
 
 console.log(searchHistory)
+
+
