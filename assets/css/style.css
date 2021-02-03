@@ -22,10 +22,18 @@
   height: 50px;
 }
 
+.imgSize {
+  height: 50px;
+  width: 50px;
+}
 .fiveDay {
   height: 120px;
   width: 90px;
   margin: 0 15px 0 15px;
+}
+.cardHeader {
+  display: flex;
+  flex-direction: row;
 }
 
 .header {

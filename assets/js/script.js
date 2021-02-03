@@ -79,6 +79,9 @@ makeCard.append(makeP);
 var wrap = $("<div>");
 wrap.addClass("row")
 
+function fahrenheit(a){
+    return (a - 273.15) * 1.80 + 32;
+}
 
 
 
@@ -113,7 +116,34 @@ function render(){
     }
 }
 
-function makingAjaxCall(a){
+function makingAjaxCurrentCall(a){
+
+    var APIkey = "3ca7bb017648384c3b897e93f5370638";
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ a +"&appid=" + APIkey;
+
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    }).then(function(response){
+        makeCard.empty();
+     
+        var header = $("<h1>").addClass("card card-body").text(response.name + " " +new Date().toLocaleDateString() + " " ).addClass("cardHeader")
+        var img = $("<img>").attr('src',"http://openweathermap.org/img/wn/" + response.weather[0].icon +".png").addClass("imgSize")
+        var temp = $("<p>").text("temperature: " + fahrenheit(response.main.temp).toFixed(2) + "°F")
+        var humid = $("<p>").text("Humidity: " + Math.floor(response.main.humidity) +"%")
+        var wind = $("<p>").text("Wind Speed: " + response.wind.speed + "MPH");
+       
+        
+
+
+        makeCard.append(header.append(img),temp,humid,wind);
+
+        
+
+    });
+}
+function makingAjaxForecastCall(a){
 
     var APIkey = "3ca7bb017648384c3b897e93f5370638";
     var queryURL = "https://api.openweathermap.org/data/2.5/forecast?q="+ a +"&appid=" + APIkey;
@@ -123,39 +153,27 @@ function makingAjaxCall(a){
         url: queryURL,
         method: "GET"
     }).then(function(response){
-        console.log(response);
-        console.log(response.city.name);
+        wrap.empty();
 
-        function fahrenheit(a){
-            return (a - 273.15) * 1.80 + 32;
-        }
-        console.log(fahrenheit(response.list[0].main.temp));
-        console.log(response.list[1].main.humidity);
-        console.log(response.list[2].wind.speed);
-
-        console.log(response.list[4].main.temp);
-        console.log(response.city.name);
-
+   
         for(i=0;i < 5;i++){
      
            
-            var fiveDay = $("<article>");
-            var lineOne = $("<p>");
-            var lineTwo = $("<p>");
-            var lineThree = $("<p>");
-            var lineFour = $("<img>");
+            var smallCard = $("<article>");
+            var date = $("<p>");
+            var humid = $("<p>");
+            var tempfah = $("<p>");
+            var icons = $("<img>");
             
 
-             lineOne.text(response.list[(i * 8)].dt_txt);
-             lineTwo.text(Math.floor(response.list[i].main.humidity));
-            lineThree.text(Math.floor(fahrenheit(response.list[i].main.temp)));
-            lineFour.text(response.list[i].weather[0].icon).attr("src","http://openweathermap.org/img/wn/" +response.list[i].weather[0].icon +".png")
-            fiveDay.append(lineOne);
-            fiveDay.append(lineTwo);
-            fiveDay.append(lineThree);
-            fiveDay.append(lineFour);
-            fiveDay.addClass("col-2 fiveDay")
-            wrap.append(fiveDay)
+             date.text(new Date(response.list[(i * 8)].dt_txt).toLocaleDateString());
+            icons.text(response.list[i].weather[0].icon).attr("src","http://openweathermap.org/img/wn/" +response.list[i].weather[0].icon +".png")
+            tempfah.text( "Temp: " + fahrenheit(response.list[i].main.temp).toFixed(2) +"°F");
+
+             humid.text("Humidity: " + Math.floor(response.list[i].main.humidity)+"%");
+            smallCard.append(date,icons,tempfah,humid);
+            smallCard.addClass("col-2 smallCard")
+            wrap.append(smallCard)
            
             makeCard.append(wrap)
             console.log();
@@ -171,24 +189,36 @@ function searching(event){
 
     $(makeUl).empty()
     
-
-    var searchResults = $("#searchInput").val()
     
+    var searchResults = $("#searchInput").val()
+   searchResults = searchResults.toUpperCase();
+    
+    if(searchHistory.indexOf(searchResults) === -1){
+
     searchHistory.push(searchResults);
     
     localStorage.setItem("city" , JSON.stringify
     
     (searchHistory));
 
-    makingAjaxCall(searchResults);
+
+    makingAjaxCurrentCall(searchResults);
+    makingAjaxForecastCall(searchResults);
 
     render();
+    } else {
+        render();        
+            makingAjaxCurrentCall(searchResults);
+            makingAjaxForecastCall(searchResults);
+    }
+
 }
 
 function savedSearch(){
 
     var clickedValue = this.textContent;
-    makingAjaxCall(clickedValue);
+    makingAjaxCurrentCall(clickedValue);
+    makingAjaxForecastCall(clickedValue);
 
 };
 
