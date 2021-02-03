@@ -113,14 +113,10 @@ function makingAjaxCurrentCall(a){
         var temp = $("<p>").text("temperature: " + fahrenheit(response.main.temp).toFixed(2) + "°F") //temperature
         var humid = $("<p>").text("Humidity: " + Math.floor(response.main.humidity) +"%") //humidity
         var wind = $("<p>").text("Wind Speed: " + response.wind.speed + "MPH"); //wind speed
-       
-        
 
         // append the header temp humid and wind to the makecard 
         // append the img to the header 
         makeCard.append(header.append(img),temp,humid,wind);
-
-        
 
     });
 }
