@@ -14,3 +14,5 @@ it was also taught me how to really search through a return object.
 to see this site in action please visit https://tevvels.github.io/DU_bootcamp_homework_6_Weather_Dashboard/.
 
 to see the code behind it visit my github https://github.com/Tevvels/DU_bootcamp_homework_6_Weather_Dashboard
+
+![picture of weatherbaord](./assets/images/imageOne.jpg)
